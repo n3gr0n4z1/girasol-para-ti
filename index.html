@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Un Girasol Para Ti</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(to bottom, #87CEEB, #E0FFFF);
+            font-family: 'Dancing Script', cursive;
+            overflow: hidden;
+        }
+
+        .sunflower {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin-bottom: 30px;
+        }
+
+        .center {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: #654321;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse 2s infinite;
+        }
+
+        .petal {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: #FFD700;
+            border-radius: 50% 0;
+            top: 50%;
+            left: 50%;
+            transform-origin: 0 0;
+        }
+
+        .stem {
+            position: absolute;
+            width: 20px;
+            height: 200px;
+            background: #228B22;
+            bottom: -180px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .leaf {
+            position: absolute;
+            width: 50px;
+            height: 30px;
+            background: #228B22;
+            border-radius: 50%;
+            bottom: 50px;
+            left: 20px;
+            transform: rotate(-45deg);
+        }
+
+        .message {
+            text-align: center;
+            font-size: 2em;
+            color: #333;
+            margin-top: 220px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            max-width: 80%;
+            animation: fadeIn 2s ease-in;
+        }
+
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            animation: sparkle 1.5s linear infinite;
+        }
+
+        @keyframes sparkle {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(0); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="sunflower">
+        <div class="center"></div>
+        <div class="stem"></div>
+        <div class="leaf"></div>
+    </div>
+    <div class="message">
+        Esta flor la vas a tener por el resto de tu vida y es solo para vos.<br>
+        ¡Te amo mucho! ❤️
+    </div>
+
+    <script>
+        // Crear pétalos del girasol
+        function createPetals() {
+            const sunflower = document.querySelector('.sunflower');
+            const numPetals = 24;
+            
+            for (let i = 0; i < numPetals; i++) {
+                const petal = document.createElement('div');
+                petal.className = 'petal';
+                petal.style.transform = `rotate(${i * (360 / numPetals)}deg)`;
+                sunflower.appendChild(petal);
+            }
+        }
+
+        // Crear destellos
+        function createSparkle() {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = Math.random() * 100 + 'vw';
+            sparkle.style.top = Math.random() * 100 + 'vh';
+            document.body.appendChild(sparkle);
+            
+            setTimeout(() => {
+                sparkle.remove();
+            }, 1500);
+        }
+
+        // Inicializar
+        createPetals();
+        setInterval(createSparkle, 500);
+    </script>
+</body>
+</html>
