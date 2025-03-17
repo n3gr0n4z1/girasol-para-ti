@@ -16,75 +16,116 @@
             background: linear-gradient(to bottom, #87CEEB, #E0FFFF);
             font-family: 'Dancing Script', cursive;
             overflow: hidden;
+            perspective: 1000px;
         }
 
         .sunflower {
             position: relative;
-            width: 200px;
-            height: 200px;
+            width: 300px;
+            height: 300px;
             margin-bottom: 30px;
+            transform-style: preserve-3d;
+            animation: sway 4s ease-in-out infinite;
+        }
+
+        @keyframes sway {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(5deg); }
         }
 
         .center {
             position: absolute;
-            width: 80px;
-            height: 80px;
-            background: #654321;
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle at 30% 30%, 
+                #8B4513 0%, 
+                #654321 50%, 
+                #3B2610 100%);
             border-radius: 50%;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            box-shadow: inset -5px -5px 15px rgba(0,0,0,0.3);
             animation: pulse 2s infinite;
         }
 
         .petal {
             position: absolute;
-            width: 60px;
-            height: 60px;
-            background: #FFD700;
-            border-radius: 50% 0;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(45deg, 
+                #FFD700 0%, 
+                #FFA500 50%, 
+                #FFD700 100%);
+            border-radius: 50% 50% 0 50%;
             top: 50%;
             left: 50%;
             transform-origin: 0 0;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+
+        .petal:hover {
+            transform-origin: center;
+            filter: brightness(1.2);
         }
 
         .stem {
             position: absolute;
-            width: 20px;
-            height: 200px;
-            background: #228B22;
-            bottom: -180px;
+            width: 30px;
+            height: 250px;
+            background: linear-gradient(to right,
+                #228B22 0%,
+                #32CD32 50%,
+                #228B22 100%);
+            bottom: -230px;
             left: 50%;
             transform: translateX(-50%);
+            box-shadow: 3px 3px 5px rgba(0,0,0,0.2);
         }
 
         .leaf {
             position: absolute;
-            width: 50px;
-            height: 30px;
-            background: #228B22;
+            width: 80px;
+            height: 40px;
+            background: linear-gradient(to bottom right,
+                #32CD32 0%,
+                #228B22 100%);
             border-radius: 50%;
             bottom: 50px;
             left: 20px;
             transform: rotate(-45deg);
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .leaf::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top left,
+                transparent 0%,
+                rgba(255,255,255,0.2) 100%);
+            border-radius: 50%;
         }
 
         .message {
             text-align: center;
-            font-size: 2em;
+            font-size: 2.5em;
             color: #333;
             margin-top: 220px;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
             max-width: 80%;
             animation: fadeIn 2s ease-in;
+            transform: translateZ(50px);
         }
 
         @keyframes pulse {
             0% { transform: translate(-50%, -50%) scale(1); }
-            50% { transform: translate(-50%, -50%) scale(1.1); }
+            50% { transform: translate(-50%, -50%) scale(1.05); }
             100% { transform: translate(-50%, -50%) scale(1); }
         }
 
@@ -95,17 +136,32 @@
 
         .sparkle {
             position: absolute;
-            width: 4px;
-            height: 4px;
-            background: white;
+            width: 6px;
+            height: 6px;
+            background: radial-gradient(circle at center,
+                rgba(255,255,255,1) 0%,
+                rgba(255,255,255,0) 100%);
             border-radius: 50%;
             animation: sparkle 1.5s linear infinite;
+            pointer-events: none;
         }
 
         @keyframes sparkle {
-            0% { transform: scale(0); opacity: 0; }
-            50% { transform: scale(1); opacity: 1; }
-            100% { transform: scale(0); opacity: 0; }
+            0% { transform: scale(0) rotate(0deg); opacity: 0; }
+            50% { transform: scale(1) rotate(180deg); opacity: 1; }
+            100% { transform: scale(0) rotate(360deg); opacity: 0; }
+        }
+
+        .butterfly {
+            position: absolute;
+            font-size: 24px;
+            animation: fly 10s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes fly {
+            0% { transform: translate(-100vw, 0) rotate(0deg); }
+            100% { transform: translate(100vw, -50vh) rotate(360deg); }
         }
     </style>
 </head>
@@ -121,20 +177,26 @@
     </div>
 
     <script>
-        // Crear pétalos del girasol
         function createPetals() {
             const sunflower = document.querySelector('.sunflower');
-            const numPetals = 24;
+            const numPetals = 32; // Más pétalos para un aspecto más realista
             
             for (let i = 0; i < numPetals; i++) {
                 const petal = document.createElement('div');
                 petal.className = 'petal';
-                petal.style.transform = `rotate(${i * (360 / numPetals)}deg)`;
+                const rotation = (i * (360 / numPetals));
+                petal.style.transform = `rotate(${rotation}deg)`;
+                
+                // Añadir variación al tamaño y color de los pétalos
+                const scale = 0.9 + Math.random() * 0.2;
+                const hue = 45 + Math.random() * 10;
+                petal.style.transform += ` scale(${scale})`;
+                petal.style.filter = `hue-rotate(${hue}deg)`;
+                
                 sunflower.appendChild(petal);
             }
         }
 
-        // Crear destellos
         function createSparkle() {
             const sparkle = document.createElement('div');
             sparkle.className = 'sparkle';
@@ -147,9 +209,22 @@
             }, 1500);
         }
 
+        function createButterfly() {
+            const butterfly = document.createElement('div');
+            butterfly.className = 'butterfly';
+            butterfly.innerHTML = '🦋';
+            butterfly.style.top = Math.random() * 100 + 'vh';
+            document.body.appendChild(butterfly);
+            
+            butterfly.addEventListener('animationend', () => {
+                butterfly.remove();
+            });
+        }
+
         // Inicializar
         createPetals();
         setInterval(createSparkle, 500);
+        setInterval(createButterfly, 10000);
     </script>
 </body>
 </html>
