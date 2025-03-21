@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Un Girasol Para Ti</title>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <style>
         body {
             margin: 0;
@@ -13,9 +14,10 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(to bottom, #87CEEB, #E0FFFF);
+            background: linear-gradient(135deg, #FFE6F2, #E0FFFF, #FFE6F2);
             font-family: 'Dancing Script', cursive;
             overflow: hidden;
+            position: relative;
         }
 
         .sunflower {
@@ -98,14 +100,57 @@
         .message {
             text-align: center;
             font-size: 2.5em;
-            color: #333;
+            color: #FF1493;
             margin-top: 220px;
             padding: 30px;
             background: rgba(255, 255, 255, 0.9);
             border-radius: 20px;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 30px rgba(255,192,203,0.5);
             max-width: 80%;
             animation: fadeIn 2s ease-in;
+            border: 2px solid #FFB7C5;
+        }
+
+        .butterfly {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            pointer-events: none;
+        }
+
+        .butterfly::before,
+        .butterfly::after {
+            content: '🦋';
+            position: absolute;
+            font-size: 30px;
+            animation: flutter 0.3s ease-in-out infinite alternate;
+        }
+
+        .rose-petals {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .rose-petal {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #FFB7C5;
+            border-radius: 50%;
+            opacity: 0.8;
+            pointer-events: none;
+            animation: fallPetal 10s linear infinite;
+        }
+
+        .love-message {
+            position: absolute;
+            color: #FF69B4;
+            font-size: 1.5em;
+            opacity: 0;
+            pointer-events: none;
+            animation: floatMessage 4s linear infinite;
         }
 
         @keyframes sway {
@@ -133,6 +178,36 @@
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes flutter {
+            0% { transform: rotate(-10deg); }
+            100% { transform: rotate(10deg); }
+        }
+
+        @keyframes fallPetal {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% { opacity: 0.8; }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes floatMessage {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            25% { opacity: 0.8; }
+            75% { opacity: 0.8; }
+            100% {
+                transform: translateY(-100px) translateX(50px);
+                opacity: 0;
+            }
         }
 
         .sparkle {
@@ -205,6 +280,7 @@
     </style>
 </head>
 <body>
+    <div class="rose-petals"></div>
     <div class="sunflower">
         <div class="center"></div>
         <div class="stem"></div>
@@ -214,8 +290,8 @@
         <div class="heart-text">M❤️K</div>
     </div>
     <div class="message">
-        Una flor muy especial que recordarás siempre.<br>
-        ¡Te amo mucho mi amor! ❤️
+        Para el amor de mi vida.<br>
+        Cada día te amo más y más ❤️
     </div>
 
     <script>
@@ -251,9 +327,72 @@
             }, 1500);
         }
 
-        // Inicializar
+        // Agregar mariposas
+        function createButterfly() {
+            const butterfly = document.createElement('div');
+            butterfly.className = 'butterfly';
+            butterfly.style.left = Math.random() * window.innerWidth + 'px';
+            butterfly.style.top = Math.random() * window.innerHeight + 'px';
+            document.body.appendChild(butterfly);
+
+            const duration = 15000 + Math.random() * 10000;
+            const path = anime({
+                targets: butterfly,
+                translateX: [
+                    { value: anime.random(-300, 300), duration: duration/4 },
+                    { value: anime.random(-300, 300), duration: duration/4 },
+                    { value: anime.random(-300, 300), duration: duration/4 },
+                    { value: anime.random(-300, 300), duration: duration/4 }
+                ],
+                translateY: [
+                    { value: anime.random(-200, 200), duration: duration/4 },
+                    { value: anime.random(-200, 200), duration: duration/4 },
+                    { value: anime.random(-200, 200), duration: duration/4 },
+                    { value: anime.random(-200, 200), duration: duration/4 }
+                ],
+                rotate: [
+                    { value: anime.random(-45, 45), duration: duration/4 },
+                    { value: anime.random(-45, 45), duration: duration/4 },
+                    { value: anime.random(-45, 45), duration: duration/4 },
+                    { value: anime.random(-45, 45), duration: duration/4 }
+                ],
+                easing: 'easeInOutSine',
+                complete: function() {
+                    butterfly.remove();
+                }
+            });
+        }
+
+        // Crear pétalos de rosa cayendo
+        function createRosePetal() {
+            const petal = document.createElement('div');
+            petal.className = 'rose-petal';
+            petal.style.left = Math.random() * 100 + '%';
+            petal.style.animationDelay = Math.random() * 10 + 's';
+            document.querySelector('.rose-petals').appendChild(petal);
+            
+            setTimeout(() => petal.remove(), 10000);
+        }
+
+        // Crear mensajes flotantes de amor
+        function createLoveMessage() {
+            const messages = ['Te Amo', '❤️', 'Mi Amor', 'Por Siempre', 'Juntos'];
+            const message = document.createElement('div');
+            message.className = 'love-message';
+            message.textContent = messages[Math.floor(Math.random() * messages.length)];
+            message.style.left = Math.random() * 80 + 10 + '%';
+            message.style.top = Math.random() * 80 + 10 + '%';
+            document.body.appendChild(message);
+            
+            setTimeout(() => message.remove(), 4000);
+        }
+
+        // Iniciar animaciones
         createPetals();
         setInterval(createSparkle, 500);
+        setInterval(createButterfly, 3000);
+        setInterval(createRosePetal, 300);
+        setInterval(createLoveMessage, 2000);
     </script>
 </body>
 </html>
