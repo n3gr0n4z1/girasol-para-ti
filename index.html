@@ -121,6 +121,59 @@
             50% { transform: scale(1); opacity: 1; }
             100% { transform: scale(0); opacity: 0; }
         }
+
+        .heart {
+            position: absolute;
+            width: 100px;
+            height: 90px;
+            top: 50%;
+            right: 20%;
+            transform-origin: center;
+            animation: heartBeat 1.5s ease infinite;
+        }
+
+        .heart::before,
+        .heart::after {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 80px;
+            background: #FF69B4;
+            border-radius: 50px 50px 0 0;
+        }
+
+        .heart::before {
+            left: 50px;
+            transform: rotate(-45deg);
+            transform-origin: 0 100%;
+        }
+
+        .heart::after {
+            left: 0;
+            transform: rotate(45deg);
+            transform-origin: 100% 100%;
+        }
+
+        .heart-text {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            top: 30%;
+            left: 0;
+            color: white;
+            font-size: 2em;
+            font-family: 'Dancing Script', cursive;
+            z-index: 1;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            14% { transform: scale(1.1); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.1); }
+            70% { transform: scale(1); }
+        }
     </style>
 </head>
 <body>
@@ -128,6 +181,9 @@
         <div class="center"></div>
         <div class="stem"></div>
         <div class="leaf"></div>
+    </div>
+    <div class="heart">
+        <div class="heart-text">M❤️K</div>
     </div>
     <div class="message">
         Una flor muy especial que recordarás siempre.<br>
